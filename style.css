@@ -302,7 +302,7 @@ button { cursor: pointer; font-family: inherit; }
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: url('images/banner.jpeg') center/cover no-repeat;
+  background: url('banner.jpeg') center/cover no-repeat;
   transform: scale(1.05);
   transition: transform 8s ease-out;
 }
