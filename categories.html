@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse all Pet Haven product categories – food, toys, grooming, accessories and more.">
+  <title>Categories – Pet Haven</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <style>
+    /* Categories page specific styles */
+    .cat-section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 48px 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .cat-section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(28,43,74,0.1);
+    }
+
+    .cat-big-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(28,43,74,0.06);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .cat-big-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(184,144,42,0.25);
+    }
+    .cat-big-card-header {
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cat-big-card-header::before {
+      content: attr(data-emoji);
+      position: absolute;
+      font-size: 8rem;
+      opacity: 0.07;
+      right: -10px;
+      bottom: -20px;
+    }
+    .cat-big-card-header .icon { font-size: 3.5rem; display: block; margin-bottom: 12px; }
+    .cat-big-card-header h3 { color: var(--white); font-size: 1.1rem; font-weight: 700; }
+    .cat-big-card-header p  { color: rgba(255,255,255,0.65); font-size: 0.8rem; margin-top: 4px; }
+    .cat-big-card-body { padding: 20px 24px 24px; flex: 1; }
+    .cat-big-card-body ul { display: flex; flex-direction: column; gap: 8px; }
+    .cat-big-card-body ul li {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      padding: 8px 12px;
+      background: var(--gray-light);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cat-big-card-body ul li span { color: var(--gold); font-weight: 700; font-size: 0.8rem; }
+    .cat-big-card-footer { padding: 0 24px 24px; }
+    .cat-big-card-footer a {
+      display: block;
+      text-align: center;
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      color: var(--white);
+      padding: 12px;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .cat-big-card-footer a:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .pet-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .pet-tab {
+      padding: 12px 32px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      border: 2px solid rgba(28,43,74,0.15);
+      background: var(--white);
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pet-tab.active, .pet-tab:hover {
+      background: var(--navy);
+      color: var(--white);
+      border-color: var(--navy);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<header>
+  <nav class="navbar" role="navigation">
+    <div class="nav-container">
+      <button class="mobile-search-toggle" id="mobileSearchToggle" aria-label="Search" aria-expanded="false">🔍</button>
+      <a href="index.html" class="nav-logo">
+        <img src="images/logo.jpeg" alt="Pet Haven Logo" width="48" height="48">
+        <div class="logo-text">
+          <span class="brand-pet">Pet</span><span class="brand-haven">Haven</span>
+          <span class="brand-tag">All Your Pets, All Their Needs</span>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="categories.html">Categories</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <form class="nav-search" id="navSearchForm" role="search">
+        <input type="search" placeholder="Search products..." aria-label="Search">
+        <button type="submit">🔍</button>
+      </form>
+      <div class="nav-actions">
+        <button class="cart-btn" id="cartBtn" aria-label="Open cart" aria-haspopup="dialog">
+          🛒
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+    <div class="mobile-menu">
+      <a href="index.html">🏠 Home</a>
+      <a href="products.html">🛍️ Products</a>
+      <a href="categories.html">📦 Categories</a>
+      <a href="about.html">💛 About Us</a>
+      <a href="contact.html">📞 Contact</a>
+      <form class="mobile-search" id="mobileSearchForm">
+        <span>🔍</span><input type="search" placeholder="Search..." aria-label="Search">
+      </form>
+    </div>
+    <div class="mobile-search-bar" id="mobileSearchBar">
+      <form id="mobileHeaderSearchForm" role="search" aria-label="Search products">
+        <input type="search" id="mobileHeaderSearchInput" placeholder="Search products..." aria-label="Search" autocomplete="off">
+        <button type="submit" aria-label="Submit search">🔍</button>
+      </form>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+  <section class="page-hero">
+    <div class="gold-line"></div>
+    <h1>📦 All Categories</h1>
+    <p>Find exactly what your pet needs — organized by type</p>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <!-- Food & Nutrition -->
+      <div class="cat-section-title">🍽️ Food & Nutrition</div>
+      <div class="products-grid" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));">
+
+        <div class="cat-big-card">
+          <div class="cat-big-card-header" data-emoji="🥣">
+            <span class="icon">🥣</span>
+            <h3>Dry Food</h3>
+            <p>Complete balanced nutrition</p>
+          </div>
+          <div class="cat-big-card-body">
+            <ul>
+              <li>Royal Canin Maxi Adult <span>285 EGP</span></li>
+              <li>Whiskas Dry Salmon <span>145 EGP</span></li>
+              <li>Hill's Science Diet <span>320 EGP</span></li>
+            </ul>
+          </div>
+          <div class="cat-big-card-footer">
+            <a href="products.html?category=dry-food">Browse Dry Food →</a>
+          </div>
+        </div>
+
+        <div class="cat-big-card">
+          <div class="cat-big-card-header" data-emoji="🥫">
+            <span class="icon">🥫</span>
+            <h3>Wet Food</h3>
+            <p>Juicy, flavorful meals</p>
+          </div>
+          <div class="cat-big-card-body">
+            <ul>
+              <li>Fancy Feast Tuna & Shrimp <span>28 EGP</span></li>
+              <li>Pedigree Beef in Gravy <span>35 EGP</span></li>
+            </ul>
+          </div>
+          <div class="cat-big-card-footer">
+            <a href="products.html?category=wet-food">Browse Wet Food →</a>
+          </div>
+        </div>
+
+        <div class="cat-big-card">
+          <div class="cat-big-card-header" data-emoji="🦴">
+            <span class="icon">🦴</span>
+            <h3>Treats</h3>
+            <p>Reward your pet with love</p>
+          </div>
+          <div class="cat-big-card-body">
+            <ul>
+              <li>Temptations Cat Treats <span>55 EGP</span></li>
+              <li>Milk-Bone Dog Biscuits <span>75 EGP</span></li>
+            </ul>
+          </div>
+          <div class="cat-big-card-footer">
+            <a href="products.html?category=treats">Browse Treats →</a>
+          </div>
+        </div>
+
+        <div class="cat-big-card">
+          <div class="cat-big-card-header" data-emoji="🪣">
+            <span class="icon">🪣</span>
+            <h3>Cat Litter</h3>
+            <p>Odor control & easy cleanup</p>
+          </div>
+          <div class="cat-big-card-body">
+            <ul>
+              <li>Catsan Ultra Clumping <span>110 EGP</span></li>
+              <li>Ever Clean Scented 6L <span>135 EGP</span></li>
+            </ul>
+          </div>
+          <div class="cat-big-card-footer">
+            <a href="products.html?category=cat-litter">Browse Cat Litter →</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Play & Fun -->
+      <div class="cat-section-title">🎮 Play & Fun</div>
+      <div class="products-grid" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));">
+
+        <div class="cat-big-card">
+          <div class="cat-big-card-header" data-emoji="🧸">
+            <span class="icon">🧸</span>
+            <h3>Toys</h3>
+            <p>Keep them active & happy</p>
+          </div>
+          <div class="cat-big-card-body">
+            <ul>
+              <li>Kong Classic Dog Toy <span>165 EGP</span></li>
+              <li>Cat Feather Wand <span>45 EGP</span></li>
+              <li>Rope Tug of War Toy <span>80 EGP</span></li>
+            </ul>
+          </div>
+          <div class="cat-big-card-footer">
+            <a href="products.html?category=toys">Browse Toys →</a>
+          </div>
+        </div>
+
+        <div class="cat-big-card">
+          <div class="cat-big-card-header" data-emoji="🛏️">
+            <span class="icon">🛏️</span>
+            <h3>Beds</h3>
+            <p>Sweet dreams guaranteed</p>
+          </div>
+          <div class="cat-big-card-body">
+            <ul>
+              <li>Orthopedic Dog Bed XL <span>350 EGP</span></li>
+              <li>Cozy Cave Cat Bed <span>185 EGP</span></li>
+            </ul>
+          </div>
+          <div class="cat-big-card-footer">
+            <a href="products.html?category=beds">Browse Beds →</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Gear & Accessories -->
+      <div class="cat-section-title">⚙️ Gear & Accessories</div>
+      <div class="products-grid" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));">
+
+        <div class="cat-big-card">
+          <div class="cat-big-card-header" data-emoji="🏷️">
+            <span class="icon">🏷️</span>
+            <h3>Collars</h3>
+            <p>Style meets safety</p>
+          </div>
+          <div class="cat-big-card-body">
+            <ul>
+              <li>Reflective Safety Collar <span>95 EGP</span></li>
+              <li>Leather Breakaway Collar <span>65 EGP</span></li>
+            </ul>
+          </div>
+          <div class="cat-big-card-footer">
+            <a href="products.html?category=collars">Browse Collars →</a>
+          </div>
+        </div>
+
+        <div class="cat-big-card">
+          <div class="cat-big-card-header" data-emoji="🔗">
+            <span class="icon">🔗</span>
+            <h3>Leashes</h3>
+            <p>Walk with confidence</p>
+          </div>
+          <div class="cat-big-card-body">
+            <ul>
+              <li>Retractable Leash 5m <span>120 EGP</span></li>
+            </ul>
+          </div>
+          <div class="cat-big-card-footer">
+            <a href="products.html?category=leashes">Browse Leashes →</a>
+          </div>
+        </div>
+
+        <div class="cat-big-card">
+          <div class="cat-big-card-header" data-emoji="🫙">
+            <span class="icon">🫙</span>
+            <h3>Bowls</h3>
+            <p>Mealtime made easy</p>
+          </div>
+          <div class="cat-big-card-body">
+            <ul>
+              <li>Stainless Double Bowl Set <span>85 EGP</span></li>
+              <li>Elevated Cat Feeding Station <span>110 EGP</span></li>
+            </ul>
+          </div>
+          <div class="cat-big-card-footer">
+            <a href="products.html?category=bowls">Browse Bowls →</a>
+          </div>
+        </div>
+
+        <div class="cat-big-card">
+          <div class="cat-big-card-header" data-emoji="👜">
+            <span class="icon">👜</span>
+            <h3>Carriers</h3>
+            <p>Travel safe together</p>
+          </div>
+          <div class="cat-big-card-body">
+            <ul>
+              <li>Airline-Approved Pet Carrier <span>280 EGP</span></li>
+            </ul>
+          </div>
+          <div class="cat-big-card-footer">
+            <a href="products.html?category=carriers">Browse Carriers →</a>
+          </div>
+        </div>
+
+        <div class="cat-big-card">
+          <div class="cat-big-card-header" data-emoji="✂️">
+            <span class="icon">✂️</span>
+            <h3>Grooming</h3>
+            <p>Look & feel their best</p>
+          </div>
+          <div class="cat-big-card-body">
+            <ul>
+              <li>Self-Cleaning Slicker Brush <span>130 EGP</span></li>
+              <li>Oatmeal Pet Shampoo 500ml <span>90 EGP</span></li>
+            </ul>
+          </div>
+          <div class="cat-big-card-footer">
+            <a href="products.html?category=grooming-products">Browse Grooming →</a>
+          </div>
+        </div>
+
+        <div class="cat-big-card">
+          <div class="cat-big-card-header" data-emoji="🎀">
+            <span class="icon">🎀</span>
+            <h3>Accessories</h3>
+            <p>Extra care & comfort</p>
+          </div>
+          <div class="cat-big-card-body">
+            <ul>
+              <li>GPS Pet Tracker Tag <span>420 EGP</span></li>
+              <li>Automatic Water Fountain <span>195 EGP</span></li>
+            </ul>
+          </div>
+          <div class="cat-big-card-footer">
+            <a href="products.html?category=accessories">Browse Accessories →</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="images/logo.jpeg" alt="Pet Haven Logo" width="52" height="52">
+        <div class="brand-name">Pet<span>Haven</span></div>
+        <p>Your trusted partner for premium pet products. We believe every pet deserves the best.</p>
+        <div class="social-links">
+          <a href="#" class="social-link">📘</a>
+          <a href="#" class="social-link">📸</a>
+          <a href="https://wa.me/201234567890" class="social-link" target="_blank" rel="noopener">💬</a>
+          <a href="#" class="social-link">🎵</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">🏠 Home</a></li>
+          <li><a href="products.html">🛍️ All Products</a></li>
+          <li><a href="categories.html">📦 Categories</a></li>
+          <li><a href="about.html">💛 About Us</a></li>
+          <li><a href="contact.html">📞 Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="products.html?category=dry-food">Dry Food</a></li>
+          <li><a href="products.html?category=wet-food">Wet Food</a></li>
+          <li><a href="products.html?category=toys">Toys</a></li>
+          <li><a href="products.html?category=beds">Beds</a></li>
+          <li><a href="products.html?category=grooming-products">Grooming</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <div class="footer-contact-item"><span>📍</span><span>Cairo, Egypt</span></div>
+        <div class="footer-contact-item"><span>📞</span><span>+20 123 456 7890</span></div>
+        <div class="footer-contact-item"><span>✉️</span><span>hello@pethaven.eg</span></div>
+        <div class="footer-contact-item"><span>🕐</span><span>Sat–Thu: 9am – 9pm</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 <strong>Pet Haven</strong>. All rights reserved. Made with ❤️ for pets.</p>
+      <span class="footer-paw">🐾🐾🐾</span>
+    </div>
+  </div>
+</footer>
+
+<button id="scrollTop" aria-label="Scroll to top">↑</button>
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" role="dialog" aria-label="Shopping cart" aria-modal="true">
+  <div class="cart-drawer-header">
+    <h3>🛒 Your Cart</h3>
+    <button class="cart-close" id="cartClose" aria-label="Close cart">✕</button>
+  </div>
+  <div class="cart-drawer-body" id="cartDrawerBody">
+    <div class="cart-empty">
+      <div class="icon">🛒</div>
+      <h3>Your cart is empty</h3>
+      <p>Add some products to get started!</p>
+    </div>
+  </div>
+  <div class="cart-drawer-footer">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <span class="cart-total-amount" id="cartTotalAmount">0 EGP</span>
+    </div>
+    <button class="btn-whatsapp cart-whatsapp-btn" onclick="orderCartOnWhatsApp()">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.848L.057 23.999l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.37l-.36-.214-3.733.979 1-3.628-.234-.373A9.817 9.817 0 012.182 12C2.182 6.578 6.578 2.182 12 2.182S21.818 6.578 21.818 12 17.422 21.818 12 21.818z"/></svg>
+      Order on WhatsApp
+    </button>
+    <button class="cart-clear-btn" id="cartClearBtn">🗑️ Clear Cart</button>
+  </div>
+</aside>
+
+<script src="script.js"></script>
+</body>
+</html>
