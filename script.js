@@ -352,6 +352,12 @@ function orderCartOnWhatsApp() {
   );
 
   window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
+
+   cart = [];
+saveCart();
+renderCart();
+updateCartCount();
+   
 }
 
 /* ------------------------------------------------
