@@ -780,13 +780,13 @@ button { cursor: pointer; font-family: inherit; }
    FILTERS (Products Page)
    ================================================ */
 .filters-bar {
+ 
   background: var(--white);
   border-bottom: 1px solid rgba(28,43,74,0.08);
   padding: 20px 0;
-  position: sticky;
-  top: 72px;
-  z-index: 100;
+  position: static;
   box-shadow: var(--shadow-sm);
+
 }
 
 .filters-inner {
